@@ -59,18 +59,18 @@ export default function Home() {
           />
           <input type="submit" value="Generate Recommendations" />
         </form>
-        <label>
-          Uniqueness level:
-          <input
-            type="range"
-            min="1"
-            max="5"
-            name="uniqueness"
-            value={uniqueness}
-            onChange={(e) => setUniqueness(e.target.value)}
-          />
-          {uniqueness}
-          </label>
+        <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center' }}>
+        <span style={{ marginRight: '10px' }}>More famous</span>
+        <input
+          type="range"
+          min="1"
+          max="5"
+          name="uniqueness"
+          value={uniqueness}
+          onChange={(e) => setUniqueness(e.target.value)}
+        />
+        <span style={{ marginLeft: '10px' }}>Lesser known</span>
+        </div>
         <div className={styles.result}>
         {result && result.split('\n').map((rec, index) => rec && <p key={index}>{rec}</p>)}
          </div>
