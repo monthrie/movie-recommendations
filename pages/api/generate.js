@@ -9,7 +9,7 @@ export default async function (req, res) {
     });
     return;
   }
-
+ 
   const movies = req.body.movies || [];
   if (movies.length === 0) {
     res.status(400).json({
@@ -26,14 +26,14 @@ export default async function (req, res) {
       messages: [
         {
           role: 'system',
-          content: 'You are an assistant that suggests movies based on a given list of favorite movies.'
+          content: 'You are an assistant that suggests 5 relatively unknown movies based on a given list of favorite movies. You give a one sentence description of each movie and stay concise.'
         },
         {
           role: 'user',
           content: `My favorite movies are: ${movies.join(', ')}`
         }
       ],
-      max_tokens: 400,
+      max_tokens: 200,
     }, {
       headers: {
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
