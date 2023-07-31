@@ -5,13 +5,14 @@ import styles from "./index.module.css";
 export default function Home() {
   // Changed state variable from animalInput to movieInput
   const [movieInput, setMovieInput] = useState("");
+  const [uniqueness, setUniqueness] = useState(1); 
   const [result, setResult] = useState();
 
   async function onSubmit(event) {
     event.preventDefault();
     try {
       // Added this line to convert the movie input string to an array. The trim() method removes any whitespace before or after each movie title.
-      const movieArray = movieInput.split(',').map(movie => movie.trim());
+      const movieArray = [movieInput.trim()];
 
       // Changed 'animal' to 'movies' in the request body
       const response = await fetch("/api/generate", {
@@ -19,7 +20,7 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ movies: movieArray }),
+        body: JSON.stringify({ movies: movieArray, uniqueness: uniqueness }),
       });
 
       const data = await response.json();
@@ -58,6 +59,18 @@ export default function Home() {
           />
           <input type="submit" value="Generate Recommendations" />
         </form>
+        <label>
+          Uniqueness level:
+          <input
+            type="range"
+            min="1"
+            max="5"
+            name="uniqueness"
+            value={uniqueness}
+            onChange={(e) => setUniqueness(e.target.value)}
+          />
+          {uniqueness}
+          </label>
         <div className={styles.result}>
         {result && result.split('\n').map((rec, index) => rec && <p key={index}>{rec}</p>)}
          </div>

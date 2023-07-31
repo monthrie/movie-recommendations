@@ -11,6 +11,8 @@ export default async function (req, res) {
   }
  
   const movies = req.body.movies || [];
+  const uniqueness = Number(req.body.uniqueness) || 1;
+
   if (movies.length === 0) {
     res.status(400).json({
       error: {
@@ -22,15 +24,16 @@ export default async function (req, res) {
 
   try {
     const openaiResponse = await axios.post('https://api.openai.com/v1/chat/completions', {
+      
       model: 'gpt-3.5-turbo',
       messages: [
         {
           role: 'system',
-          content: 'You are an assistant that suggests 5 relatively unknown movies based on a given list of favorite movies. You give a one sentence description of each movie and stay concise.'
+          content: 'You are an assistant that suggests 5 movies based on a given list of favorite movies. Your introduction is just "Here are 5 recomendations based on your favourites:". You give a concise one sentence description of each movie and include the year it was made in brackets after the title.'
         },
         {
           role: 'user',
-          content: `My favorite movies are: ${movies.join(', ')}`
+          content: `My favorite movies are: ${movies.join(', ')}. I'm looking for recommendations that are ${getUniquenessDescriptor(uniqueness)}.`
         }
       ],
       max_tokens: 200,
@@ -62,5 +65,15 @@ export default async function (req, res) {
         }
       });
     }
+  }
+}
+function getUniquenessDescriptor(level) {
+  switch (level) {
+    case 1: return "very popular and mainstream";
+    case 2: return "fairly popular";
+    case 3: return "a mix of popular and less known";
+    case 4: return "fairly unique and lesser-known";
+    case 5: return "very obscure, and almost unknown";
+    default: return "a mix of popular and less known";
   }
 }
